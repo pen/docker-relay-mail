@@ -1,0 +1,38 @@
+#!/bin/sh
+
+relay_conf=/ext/relay.conf
+[[ -f $relay_conf ]] && source $relay_conf
+[[ -z "$DOMAINS"     ]] && exit
+[[ -z "$ISP_SMTP"    ]] && exit
+[[ -z "$ISP_SMTP_ID" ]] && exit
+[[ -z "$ISP_SMTP_PW" ]] && exit
+[[ -z "$RELAY"       ]] && exit
+
+postconf 'smtputf8_enable = no'
+
+virtual=/etc/postfix/virtual
+postconf "virtual_alias_domains = $DOMAINS"
+echo $RELAY | while read -r line; do
+    [[ -z "$line" ]] && continue;
+    echo $line | while IFS='=' read -r to froms; do
+        [[ -z "$froms" ]] && continue;
+        echo $froms | sed 's/ /\n/g' | while read -r from; do
+            [[ -z "$from" ]] && continue;
+            echo "$from $to"
+        done
+    done
+done > $virtual
+postconf "virtual_alias_maps = hash:$virtual"
+postmap hash:$virtual
+
+postconf "relayhost = $ISP_SMTP"
+postconf 'smtp_sasl_auth_enable = yes'
+postconf 'smtp_sasl_security_options = noanonymous'
+
+sasl_password=/etc/postfix/sasl
+echo "$ISP_SMTP $ISP_SMTP_ID:$ISP_SMTP_PW" > $sasl_password
+postconf "smtp_sasl_password_maps = hash:$sasl_password"
+postmap hash:$sasl_password
+
+postfix start
+exec syslogd -n -O -
