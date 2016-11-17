@@ -5,19 +5,16 @@
 A Postfix container only relays virtual address.
 
 If you have some internet domains and then many mail addresses,
-You may want to read mails by one Gmail mailbox.
-
-So run this container and set all domains' MX point to the host.
+You may want to handle mails by one Gmail mailbox.
 
 ## Requiement
 
 ### to receive
-MTAs in Internet can access the port 25 of your host.
-And you need change MX record of your domains to the host.
+Set your MX records point your internet-reachable host which can use port 25.
 
 ### to relay
-An ISP account you may use MTA via SMTP Auth.
-Gmail rejects mails from anonymous MTA.
+You need an ISP account that you may use MTA by SMTP Auth.
+Gmail rejects to receive from anonymous MTA.
 
 ## Install
 
@@ -29,7 +26,7 @@ docker run -p 25:25 -v $HOME/relay-mail:/ext -d pengo/relay-mail
 
 ## Configuration
 
-Basically, set VALUEs with Shell script syntax.
+Simply set VALUEs with /bin/sh syntax.
 `RELAY` is a bit complicated.  Don't miss quotes.
 
 ```shell
@@ -45,5 +42,5 @@ anothr.example@gmail.com   = test@foo.example.net
 
 ## Note
 
-The container reads relay.conf at start only.
-If you afraid of SMTP password, you can remove it after confirmed the service.
+The container reads relay.conf only at start.
+If you afraid of password remove it after confirmed the service.
