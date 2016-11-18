@@ -10,6 +10,8 @@ relay_conf=/ext/relay.conf
 
 postconf 'smtputf8_enable = no'
 
+postalias hash:/etc/postfix/aliases
+
 virtual=/etc/postfix/virtual
 postconf "virtual_alias_domains = $DOMAINS"
 echo $RELAY | while read -r line; do
