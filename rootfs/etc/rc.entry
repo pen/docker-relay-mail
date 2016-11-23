@@ -14,7 +14,7 @@ postalias hash:/etc/postfix/aliases
 
 virtual=/etc/postfix/virtual
 postconf "virtual_alias_domains = $DOMAINS"
-echo $RELAY | while read -r line; do
+echo "$RELAY" | while read -r line; do
     [[ -z "$line" ]] && continue;
     echo $line | while IFS='=' read -r to froms; do
         [[ -z "$froms" ]] && continue;
