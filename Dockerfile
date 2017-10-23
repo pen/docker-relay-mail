@@ -7,6 +7,6 @@ RUN apk add --no-cache postfix
 COPY rootfs /
 
 VOLUME ["/ext"]
-EXPOSE 80
+EXPOSE 25
 
 CMD ["/etc/rc.entry"]
