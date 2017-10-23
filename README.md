@@ -16,7 +16,7 @@ MX records point this container.
 ```shell
 mkdir conf
 vi conf/relay.conf
-docker run -p 25:25 -v $PWD/conf:/ext -d pengo/relay-mail
+docker run --net=host -p 25:25 -v $PWD/conf:/ext -d pengo/relay-mail
 ```
 
 ## Configuration
